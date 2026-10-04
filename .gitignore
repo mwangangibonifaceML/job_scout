@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Ruff
+.ruff_cache/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
