@@ -73,10 +73,12 @@ class JobData:
             "external_id": self.external_id,
         }
 
+
 class BaseScraper(ABC):
     "Base scraper for a scraper classes"
+
     SOURCE_NAME: str = "unknown"
-    
+
     _USER_AGENTS = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
@@ -84,9 +86,10 @@ class BaseScraper(ABC):
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     )
-    
+
     def __init__(self) -> None:
         import random
+
         self.session = requests.Session()
         self.session.headers.update(
             {
@@ -98,15 +101,16 @@ class BaseScraper(ABC):
                 "Upgrade-Insecure-Requests": "1",
             }
         )
-        
+
     def rorate_user_agents(self):
         "Rotate the user Agents."
         import random
+
         self.session.headers["user-Agent"] = random.choice(self._USER_AGENTS)
-        
+
     def fetch_page(
         self, url: str, parameters: dict | None = None
-        ) -> BeautifulSoup | None:
+    ) -> BeautifulSoup | None:
         "Fetch a page and return a parsed HTML."
         self.rorate_user_agents()
         try:
@@ -116,10 +120,8 @@ class BaseScraper(ABC):
         except requests.RequestException as e:
             logger.error(f"{self.SOURCE_NAME} failed to fetch {url}: {e}")
             return None
-            
-    def fetch_json(
-        self, url: str, parameters: dict | None = None
-        ) -> dict | None:
+
+    def fetch_json(self, url: str, parameters: dict | None = None) -> dict | None:
         "Fetch json data for a url page endpoint."
         self.rorate_user_agents()
         try:
@@ -129,11 +131,11 @@ class BaseScraper(ABC):
         except requests.RequestException as e:
             logger.error(f"{self.SOURCE_NAME} failed to json {url}: {e}")
             return None
-        
+
     @abstractmethod
     def scrape(
         self, seacrh_query: str, location: str, number_of_pages: int
-        )-> list[JobData]:
+    ) -> list[JobData]:
         """Scrape jobs. Must be implemented by each scraper."""
         raise NotImplementedError(
             "This method is not meant to be called directly"
@@ -148,8 +150,6 @@ class BaseScraper(ABC):
                     search_query: str,
                     location: str,
                     number_of_pages:int) -> list[JobData]:
-                    
-                    ....
-                    
+                    ...
             """
         )
