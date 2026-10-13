@@ -218,8 +218,8 @@ def test_job_data_optional_fields_default_correclty():
 
 
 def test_job_data_stores_all_supplied_fields() -> None:
-    posted_date = datetime.datetime(2026, 10, 1, 9, 0, tzinfo=datetime.timezone)
-    deadline = datetime.datetime(2026, 11, 1, 17, 0, tzinfo=datetime.timezone)
+    posted_date = datetime.datetime(2026, 10, 1, 9, 0, tzinfo=datetime.UTC)
+    deadline = datetime.datetime(2026, 11, 1, 17, 0, tzinfo=datetime.UTC)
 
     job = JobData(
         title="Python Developer",
