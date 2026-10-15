@@ -14,7 +14,7 @@ class JobData:
     def __init__(
         self,
         title: str,
-        src\
+        source: str,
         company: str | None = None,
         location: str | None = None,
         industry: str | None = None,
@@ -83,8 +83,8 @@ class BaseScraper(ABC):
     SOURCE_NAME: str = "unknown"
 
     _USER_AGENTS = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64), "
+            "AppleWebKit/537.36 (KHTML, like Gecko), "
             "Chrome/124.0.0.0 Safari/537.36",
     )
 
