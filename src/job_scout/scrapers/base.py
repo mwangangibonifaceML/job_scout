@@ -14,7 +14,6 @@ class JobData:
     def __init__(
         self,
         title: str,
-        src\
         company: str | None = None,
         location: str | None = None,
         industry: str | None = None,
