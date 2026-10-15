@@ -59,7 +59,7 @@ class JobData:
             "source": self.source,
             "company": self.company,
             "location": self.location,
-            "industry":  self.industry,
+            "industry": self.industry,
             "description": self.description,
             "salary_min": self.salary_min,
             "salary_max": self.salary_max,
@@ -83,9 +83,11 @@ class BaseScraper(ABC):
     SOURCE_NAME: str = "unknown"
 
     _USER_AGENTS = (
+        (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64), "
             "AppleWebKit/537.36 (KHTML, like Gecko), "
-            "Chrome/124.0.0.0 Safari/537.36",
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
     )
 
     def __init__(self) -> None:
@@ -97,8 +99,8 @@ class BaseScraper(ABC):
                 "User-Agent": random.choice(self._USER_AGENTS),
                 "Accept-Language": "en-US,en;q=0.9",
                 "Accept": (
-                        "text/html,application/xhtml+xml,"
-                        "application/xml;q=0.9,*/*;q=0.8"),
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                ),
                 # "Accept-Encoding": "gzip, deflate, br",
                 # "Connection": "keep-alive",
                 # "Upgrade-Insecure-Requests": "1",
@@ -138,7 +140,10 @@ class BaseScraper(ABC):
 
     @abstractmethod
     def scrape(
-        self, seacrh_query: str = None, location: str ="kenya", number_of_pages: int = 3
+        self,
+        seacrh_query: str | None = None,
+        location: str | None = None,
+        number_of_pages: int = 3,
     ) -> list[JobData]:
         """Scrape jobs. Must be implemented by each scraper."""
         raise NotImplementedError(
