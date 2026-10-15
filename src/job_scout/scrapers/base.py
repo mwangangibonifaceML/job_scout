@@ -14,9 +14,10 @@ class JobData:
     def __init__(
         self,
         title: str,
-        source: str,
+        src\
         company: str | None = None,
         location: str | None = None,
+        industry: str | None = None,
         description: str | None = None,
         salary_min: float | None = None,
         salary_max: float | None = None,
@@ -36,6 +37,7 @@ class JobData:
         self.source = source
         self.company = company
         self.location = location
+        self.industry = industry
         self.description = description
         self.salary_min = salary_min
         self.salary_max = salary_max
@@ -57,6 +59,7 @@ class JobData:
             "source": self.source,
             "company": self.company,
             "location": self.location,
+            "industry":  self.industry,
             "description": self.description,
             "salary_min": self.salary_min,
             "salary_max": self.salary_max,
@@ -80,11 +83,9 @@ class BaseScraper(ABC):
     SOURCE_NAME: str = "unknown"
 
     _USER_AGENTS = (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
-        "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36",
     )
 
     def __init__(self) -> None:
@@ -95,35 +96,38 @@ class BaseScraper(ABC):
             {
                 "User-Agent": random.choice(self._USER_AGENTS),
                 "Accept-Language": "en-US,en;q=0.9",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
-                "Upgrade-Insecure-Requests": "1",
+                "Accept": (
+                        "text/html,application/xhtml+xml,"
+                        "application/xml;q=0.9,*/*;q=0.8"),
+                # "Accept-Encoding": "gzip, deflate, br",
+                # "Connection": "keep-alive",
+                # "Upgrade-Insecure-Requests": "1",
             }
         )
 
-    def rorate_user_agents(self):
+    def rotate_user_agent(self):
         "Rotate the user Agents."
         import random
 
-        self.session.headers["user-Agent"] = random.choice(self._USER_AGENTS)
+        self.session.headers["User-Agent"] = random.choice(self._USER_AGENTS)
 
     def fetch_page(
         self, url: str, parameters: dict | None = None
     ) -> BeautifulSoup | None:
         "Fetch a page and return a parsed HTML."
-        self.rorate_user_agents()
+        self.rotate_user_agent()
         try:
-            response = self.session.get(url=url, params=parameters)
+            response = self.session.get(url=url, params=parameters, timeout=30)
             response.raise_for_status()
             return BeautifulSoup(response.text, "lxml")
+            # return response
         except requests.RequestException as e:
             logger.error(f"{self.SOURCE_NAME} failed to fetch {url}: {e}")
             return None
 
     def fetch_json(self, url: str, parameters: dict | None = None) -> dict | None:
         "Fetch json data for a url page endpoint."
-        self.rorate_user_agents()
+        self.rotate_user_agent()
         try:
             response = self.session.get(url=url, params=parameters)
             response.raise_for_status()
@@ -134,7 +138,7 @@ class BaseScraper(ABC):
 
     @abstractmethod
     def scrape(
-        self, seacrh_query: str, location: str, number_of_pages: int
+        self, seacrh_query: str = None, location: str ="kenya", number_of_pages: int = 3
     ) -> list[JobData]:
         """Scrape jobs. Must be implemented by each scraper."""
         raise NotImplementedError(
