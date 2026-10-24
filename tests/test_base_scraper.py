@@ -15,7 +15,7 @@ class ConcreteScraper(BaseScraper):
     SOURCE_NAME = "test_scraper"
 
     def scrape(
-        self, search_query: str, location: str, number_of_pages: int
+        self, location: str, number_of_pages: int
     ) -> list[JobData]:
         return []
 
@@ -189,7 +189,6 @@ def test_concrete_scraper_scrape_returns_jobs() -> None:
     instance = ConcreteScraper()
 
     result = instance.scrape(
-        search_query="Python Developer",
         location="Nairobi",
         number_of_pages=2,
     )
@@ -237,7 +236,7 @@ def test_job_data_stores_all_supplied_fields() -> None:
         url="https://example.com/jobs/123",
         apply_url="https://example.com/apply/123",
         tags="Python, FastAPI",
-        requirements="Python experience",
+        qualifications="Python experience",
         posted_date=posted_date,
         application_deadline=deadline,
         external_id="123",
@@ -255,7 +254,7 @@ def test_job_data_stores_all_supplied_fields() -> None:
     assert job.url == "https://example.com/jobs/123"
     assert job.apply_url == "https://example.com/apply/123"
     assert job.tags == "Python, FastAPI"
-    assert job.requirements == "Python experience"
+    assert job.qualifications == "Python experience"
     assert job.posted_date == posted_date
     assert job.application_deadline == deadline
     assert job.external_id == "123"
@@ -270,7 +269,7 @@ def test_job_data_to_dict_returns_all_fields() -> None:
         external_id="123",
     )
 
-    result = job.to_dict()
+    result = job.__dict__
 
     assert result == {
         "title": "Python Developer",
@@ -281,15 +280,17 @@ def test_job_data_to_dict_returns_all_fields() -> None:
         "description": None,
         "salary_min": None,
         "salary_max": None,
-        "salary_currency": None,
+        "salary_currency": "Ksh. ",
         "job_type": None,
         "experience_level": None,
         "remote": True,
         "url": None,
         "apply_url": None,
         "tags": None,
-        "requirements": None,
+        "qualifications": None,
         "posted_date": None,
         "application_deadline": None,
         "external_id": "123",
+        "minimum_experience": None,
+        "skills": None
     }
