@@ -3,12 +3,14 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+
 from bs4 import BeautifulSoup
+
 
 @dataclass
 class CleanedDescription:
     "Cleaned and strucutred information extracted from Fuzu job description"
-    
+
     description: str
     responsibilities: str | None = None
     skills: str | None = None
@@ -32,23 +34,23 @@ def clean_job_description(data: json) -> CleanedDescription:
         Cleaned description and extracted job information.
     """
     description = data.get("description", None)
-    
+
     if description is not None:
         soup = BeautifulSoup(description, "html.parser")
-        
-    #* -----------------------------------
-    #* 1. convert html into readable text
-    #* -----------------------------------
-    
-    #* replace <p></p> html tags with a newline
+
+    # * -----------------------------------
+    # * 1. convert html into readable text
+    # * -----------------------------------
+
+    # * replace <p></p> html tags with a newline
     for p in soup.find_all("<p>"):
         p.replace_with("\n")
-            
-    #* remove html entities
+
+    # * remove html entities
     text = soup.get_text("\n")
     text = text.replace("\xa0", " ")
-    
-    #* Normalize whitespace.
+
+    # * Normalize whitespace.
     lines = []
 
     for line in text.splitlines():
@@ -59,9 +61,9 @@ def clean_job_description(data: json) -> CleanedDescription:
 
     text = "\n".join(lines)
 
-    #* 2. extract sections
+    # * 2. extract sections
     lines = text.splitlines()
-    
+
     section_headers = {
         "description",
         "1. key responsibilities.",
@@ -71,40 +73,37 @@ def clean_job_description(data: json) -> CleanedDescription:
         "experience:",
         "role scope and career development",
         "tags",
-        "reporting and accountability",
-        "role scope and career development",
         "kenya",
     }
-    
+
     sections: dict[str, list[str]] = {}
     current_section: str | None = None
-    
+
     for line in lines:
-    
         normalized = line.lower().strip()
         if normalized in section_headers:
             current_section = normalized
             sections[current_section] = []
             continue
-            
+
         if current_section is not None:
             sections[current_section].append(line)
-                
+
     sections = {
         section: " ".join(content).strip()
         for section, content in sections.items()
         if content
     }
-    
+
     if sections.keys():
         try:
             return CleanedDescription(
-                description= sections.get("description"),
-                responsibilities= sections["1. key responsibilities."],
-                skills= sections["skills and competencies"],
-                qualifications= sections["qualifications and experience."],
-                experience= sections["experience:"],
-                tags = sections["tags"]
+                description=sections.get("description"),
+                responsibilities=sections["1. key responsibilities."],
+                skills=sections["skills and competencies"],
+                qualifications=sections["qualifications and experience."],
+                experience=sections["experience:"],
+                tags=sections["tags"],
             )
-        except Exception as e:
-            return 
+        except Exception:
+            return

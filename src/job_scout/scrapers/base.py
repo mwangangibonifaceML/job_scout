@@ -35,6 +35,7 @@ class JobData:
     application_deadline: datetime.datetime | None = None
     external_id: str | None = None
 
+
 class BaseScraper(ABC):
     "Base scraper for a scraper classes"
 

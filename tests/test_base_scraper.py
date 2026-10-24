@@ -14,9 +14,7 @@ from job_scout.scrapers.base import BaseScraper, JobData
 class ConcreteScraper(BaseScraper):
     SOURCE_NAME = "test_scraper"
 
-    def scrape(
-        self, location: str, number_of_pages: int
-    ) -> list[JobData]:
+    def scrape(self, location: str, number_of_pages: int) -> list[JobData]:
         return []
 
 
@@ -292,5 +290,5 @@ def test_job_data_to_dict_returns_all_fields() -> None:
         "application_deadline": None,
         "external_id": "123",
         "minimum_experience": None,
-        "skills": None
+        "skills": None,
     }
