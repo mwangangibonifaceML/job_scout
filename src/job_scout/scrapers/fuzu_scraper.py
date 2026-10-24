@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 
 from job_scout.scrapers.base import BaseScraper, JobData
 from job_scout.scrapers.utils import clean_job_description
+from typing import ClassVar
+
 
 # * get and configure the logger
 logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ class FuzuScraper(BaseScraper):
     SOURCE_NAME = "Fuzu"
     BASE_URL = "https://www.fuzu.com"
 
-    COUNTRY_IDS: dict[str, int] = {"kenya": 1, "nigeria": 165, "uganda": 232}
+    COUNTRY_IDS: ClassVar[dict[str, int]] = {"kenya": 1, "nigeria": 165, "uganda": 232}
 
     def scrape(
         self, location: str | None = None, number_of_pages: int = 3
