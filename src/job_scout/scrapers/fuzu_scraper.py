@@ -3,12 +3,12 @@ from __future__ import annotations
 import datetime
 import json
 import logging
+from typing import ClassVar
 
 from bs4 import BeautifulSoup
 
 from job_scout.scrapers.base import BaseScraper, JobData
 from job_scout.scrapers.utils import clean_job_description
-from typing import ClassVar
 
 
 # * get and configure the logger
