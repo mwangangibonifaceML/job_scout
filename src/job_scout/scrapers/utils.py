@@ -97,8 +97,6 @@ def clean_job_description(data: json) -> CleanedDescription:
 
     if not sections:
         return None
-    
-    
     try:
         return CleanedDescription(
             description=sections.get("description"),
