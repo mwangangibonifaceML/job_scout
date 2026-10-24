@@ -1,6 +1,8 @@
 import datetime
 import logging
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import ClassVar
 
 import requests
 from bs4 import BeautifulSoup
@@ -8,81 +10,39 @@ from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
 
 
+@dataclass
 class JobData:
     """Standard job data container used across all scrapers."""
 
-    def __init__(
-        self,
-        title: str,
-        source: str,
-        company: str | None = None,
-        location: str | None = None,
-        industry: str | None = None,
-        description: str | None = None,
-        salary_min: float | None = None,
-        salary_max: float | None = None,
-        salary_currency: str | None = None,
-        job_type: str | None = None,
-        experience_level: str | None = None,
-        remote: bool = False,
-        url: str | None = None,
-        apply_url: str | None = None,
-        tags: str | None = None,
-        requirements: str | None = None,
-        posted_date: datetime.datetime | None = None,
-        application_deadline: datetime.datetime | None = None,
-        external_id: str | None = None,
-    ):
-        self.title = title
-        self.source = source
-        self.company = company
-        self.location = location
-        self.industry = industry
-        self.description = description
-        self.salary_min = salary_min
-        self.salary_max = salary_max
-        self.salary_currency = salary_currency
-        self.job_type = job_type
-        self.experience_level = experience_level
-        self.remote = remote
-        self.url = url
-        self.apply_url = apply_url
-        self.tags = tags
-        self.requirements = requirements
-        self.posted_date = posted_date
-        self.application_deadline = application_deadline
-        self.external_id = external_id
-
-    def to_dict(self) -> dict:
-        return {
-            "title": self.title,
-            "source": self.source,
-            "company": self.company,
-            "location": self.location,
-            "industry": self.industry,
-            "description": self.description,
-            "salary_min": self.salary_min,
-            "salary_max": self.salary_max,
-            "salary_currency": self.salary_currency,
-            "job_type": self.job_type,
-            "experience_level": self.experience_level,
-            "remote": self.remote,
-            "url": self.url,
-            "apply_url": self.apply_url,
-            "tags": self.tags,
-            "requirements": self.requirements,
-            "posted_date": self.posted_date,
-            "application_deadline": self.application_deadline,
-            "external_id": self.external_id,
-        }
+    title: str
+    source: str
+    company: str | None = None
+    location: str | None = None
+    industry: str | None = None
+    description: str | None = None
+    salary_min: float | None = None
+    salary_max: float | None = None
+    salary_currency: str | None = "Ksh. "
+    job_type: str | None = None
+    experience_level: str | None = None
+    minimum_experience: str | None = None
+    remote: bool = False
+    url: str | None = None
+    apply_url: str | None = None
+    tags: str | None = None
+    skills: str | None = None
+    qualifications: str | None = None
+    posted_date: datetime.datetime | None = None
+    application_deadline: datetime.datetime | None = None
+    external_id: str | None = None
 
 
 class BaseScraper(ABC):
     "Base scraper for a scraper classes"
 
-    SOURCE_NAME: str = "unknown"
+    SOURCE_NAME: ClassVar[str] = "unknown"
 
-    _USER_AGENTS = (
+    _USER_AGENTS: ClassVar[tuple[str, ...]] = (
         (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64), "
             "AppleWebKit/537.36 (KHTML, like Gecko), "
@@ -141,7 +101,7 @@ class BaseScraper(ABC):
     @abstractmethod
     def scrape(
         self,
-        seacrh_query: str | None = None,
+        # seacrh_query: str | None = None,
         location: str | None = None,
         number_of_pages: int = 3,
     ) -> list[JobData]:
