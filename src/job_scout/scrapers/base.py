@@ -2,10 +2,10 @@ import datetime
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import ClassVar
 
 import requests
 from bs4 import BeautifulSoup
-from typing import ClassVar
 
 logger = logging.getLogger(__name__)
 

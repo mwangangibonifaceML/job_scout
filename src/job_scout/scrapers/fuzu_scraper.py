@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup
 from job_scout.scrapers.base import BaseScraper, JobData
 from job_scout.scrapers.utils import clean_job_description
 
-
 # * get and configure the logger
 logger = logging.getLogger(__name__)
 logging.basicConfig(
