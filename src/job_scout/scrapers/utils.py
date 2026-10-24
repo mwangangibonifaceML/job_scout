@@ -95,15 +95,17 @@ def clean_job_description(data: json) -> CleanedDescription:
         if content
     }
 
-    if sections.keys():
-        try:
-            return CleanedDescription(
-                description=sections.get("description"),
-                responsibilities=sections["1. key responsibilities."],
-                skills=sections["skills and competencies"],
-                qualifications=sections["qualifications and experience."],
-                experience=sections["experience:"],
-                tags=sections["tags"],
-            )
-        except Exception:
-            return
+    if not sections:
+        return None
+    
+    try:
+        return CleanedDescription(
+            description=sections.get("description"),
+            responsibilities=sections["1. key responsibilities."],
+            skills=sections["skills and competencies"],
+            qualifications=sections["qualifications and experience."],
+            experience=sections["experience:"],
+            tags=sections["tags"],
+        )
+    except TypeError:
+        return None

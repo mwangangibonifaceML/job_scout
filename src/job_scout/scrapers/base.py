@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import requests
 from bs4 import BeautifulSoup
+from typing import ClassVar
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +40,9 @@ class JobData:
 class BaseScraper(ABC):
     "Base scraper for a scraper classes"
 
-    SOURCE_NAME: str = "unknown"
+    SOURCE_NAME: ClassVar[str] = "unknown"
 
-    _USER_AGENTS = (
+    _USER_AGENTS: ClassVar[tuple[str, ...]]= (
         (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64), "
             "AppleWebKit/537.36 (KHTML, like Gecko), "
